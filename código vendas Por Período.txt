@@ -1,0 +1,139 @@
+código vendas Por Período:
+
+
+ public void atualizarRelatorioVendasPorperiodo(){
+            try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT \n" +
+"pu.nome,\n" +
+"pu.cpf,\n" +
+"v.desconto,\n" +
+"v.acrescimo,\n" +
+"v.data_compra,\n" +
+"v.valor_total\n" +
+"FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa pu ON pu.id_pessoa = u.id_pessoa\n" +
+"WHERE v.data_compra BETWEEN ? AND ?\n" +
+"ORDER BY data_compra DESC;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             stmt.setString(1, this.dataInicio.getText());
+             stmt.setString(2, this.datafinal.getText());
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelavenda = (DefaultTableModel) this.tabelaVendaperiodo.getModel();
+            tabelavenda.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("nome"),rs.getString("cpf"),rs.getString("data_compra"),rs.getString("valor_total")};
+                 tabelavenda.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+       }.
+
+
+
+ public void atualizarRelatorioVendasPorperiodo(){
+            try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT tipo,origem,valor,data_movimentacao,descricao FROM movimentacao_caixa WHERE data_movimentacao BETWEEN ? AND ? ORDER BY data_movimentacao DESC;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             stmt.setString(1, this.dataInicio.getText());
+             stmt.setString(2, this.datafinal.getText());
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelamovimentacaovenda = (DefaultTableModel) this.tabelaMovimentacaoperiodo.getModel();
+            tabelamovimentacaovenda.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("tipo"),rs.getString("origem"),rs.getString("valor"),rs.getString("data_movimentacao"),rs.getString("descricao")};
+                 tabelamovimentacaovenda.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+       }
+
+ public void graficoPizzaProdutos() {
+    DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = ConexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT * \n" +
+"FROM produto \n" +
+"WHERE quantidade_estoque < 10 AND situacao = 'ATIVO' \n" +
+"ORDER BY quantidade_estoque ASC \n" +
+"LIMIT 3;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+     
+        while (rs.next()) {
+            String denominacao = rs.getString("denominacao");
+            double quantidade = rs.getDouble("quantidade_estoque");
+            pieDataset.setValue(denominacao, quantidade);
+        }
+
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Produtos com estoque crítico",
+        pieDataset,
+        true,   // legenda
+        true,   // tooltips
+        false   // URLs
+    );
+
+    // Painel do gráfico
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+    chartPanel.setMouseWheelEnabled(true);
+
+    
+    painelGrafico.removeAll(); 
+    painelGrafico.setLayout(new java.awt.BorderLayout()); 
+    painelGrafico.add(chartPanel, BorderLayout.CENTER);
+    painelGrafico.revalidate(); 
+    painelGrafico.repaint();   
+}
+    
+    public void atualizartabelamovimentacao(){
+        
+        try {
+            String codigo=this.tabelaMovimentacaoperiodo.getValueAt(this.tabelaMovimentacaoperiodo.getSelectedRow(), 4).toString();
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT tipo,origem,valor,data_movimentacao,descricao FROM movimentacao_caixa WHERE id_venda = ?;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             stmt.setString(1,codigo);
+             ResultSet rs = stmt.executeQuery();
+             tabelaMovimentacaocaixa.
+            DefaultTableModel tabelamovimento = (DefaultTableModel) mc.tabelaMovimentacaocaixa.getModel();
+            tabelamovimento.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("tipo"),rs.getString("origem"),rs.getString("valor"),rs.getString("data_movimentacao"),rs.getString("descricao")};
+                 tabelamovimento.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+        
+    }
