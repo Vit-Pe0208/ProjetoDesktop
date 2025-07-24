@@ -1,0 +1,19 @@
+HomeCasaCodigosImportantes
+
+
+    String codigoNotaFiscal = this.tabelaVenda.getValueAt(this.tabelaVenda.getSelectedRow(), 0).toString();
+             sql ="SELECT * FROM nota_fiscal WHERE id_nota_fiscal =?;";
+              stmt = coin.prepareStatement(sql);
+             stmt.setString(1,codigoNotaFiscal);
+              rs = stmt.executeQuery();
+             
+             while(rs.next()){
+                 this.codigoNota.setText(rs.getString("id_nota_fiscal"));
+                 this.numeroNota.setText(rs.getString("numero_nota"));
+                 this.dataNota.setText(rs.getString("data_emissao"));
+                 this.valorNota.setText(rs.getString("valor_total"));
+                 
+                 
+             }
+
+
