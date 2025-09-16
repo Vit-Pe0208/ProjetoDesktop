@@ -1,0 +1,195 @@
+ try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao = 'Ativo' && denominacao LIKE '%"+this.pesquisarEstoque.getText()+"%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaEstoque.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("id_produto"),rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+ try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao LIKE 'Ativo%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaproduto1.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+
+ try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao LIKE 'Esgotado%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaproduto1.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+ try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao LIKE 'Descontinuado%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaproduto1.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+public void tabelaProduto(){
+       
+          
+         try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaproduto1.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+
+public void VendasPorPeriodo(){
+        
+         try {
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT nome,cpf,data_compra,valor_total,id_venda FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa;";
+
+             
+             
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelavenda = (DefaultTableModel) this.tabelaMovimentacaoperiodo.getModel();
+            tabelavenda.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("nome"),rs.getString("cpf"),rs.getString("data_compra"),rs.getString("valor_total"),rs.getString("id_venda")};
+                 tabelavenda.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+try {
+               SimpleDateFormat dataFormatada = new SimpleDateFormat("yyyy-MM-dd");
+               String data = dataFormatada.format(this.dateInicio.getDate()) + " 00:00:00";
+               String data2 =  dataFormatada.format(this.dateFinal.getDate())+ " 23:59:59";
+            
+            Connection coin = ConexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT nome,cpf,data_compra,valor_total,id_venda FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"WHERE data_compra between ? AND ? ;";
+             
+             
+             
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             stmt.setString(1, data);
+             stmt.setString(2, data2);
+             
+             
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelavenda = (DefaultTableModel) this.tabelaMovimentacaoperiodo.getModel();
+            tabelavenda.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("nome"),rs.getString("cpf"),rs.getString("data_compra"),rs.getString("valor_total"),rs.getString("id_venda")};
+                 tabelavenda.addRow(array);
+                 
+             }sql = "SELECT SUM(v.valor_total) AS Total FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"WHERE data_compra between ? AND ? ;";
+             
+             stmt = coin.prepareStatement(sql);
+             stmt.setString(1, data);
+             stmt.setString(2, data2);
+             
+              rs = stmt.executeQuery();
+              //double entrada = 0;
+              //double saida =0;
+              
+              if(rs.next()){
+                  String total = rs.getString("Total");
+                  
+                  if(total==null){
+                      this.resultado.setText("0");
+                  }else{
+                      this.resultado.setText(rs.getString("Total"));
+                  }
+                  
+                  
+              }
+              
+            
+              
+            //  this.total.setText(" "+resultado);
+              
+             
+             
+             
+             
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
