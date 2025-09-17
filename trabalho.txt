@@ -192,4 +192,32 @@ try {
             
         } catch (SQLException ex) {
             System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+
         }  
+
+try {
+            SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+            String dataInicio = date.format(this.dataInicial.getDate());
+             String dataFinal = date.format(this.DataFinal.getDate());
+            
+            
+            
+           
+            Connection coin = bancoDeDados.conexaoBanco();
+            String caminho = "C:\\Users\\User\\OneDrive\\Documentos\\NetBeansProjects\\jsperstudent\\src\\jsperstudent\\relatorio\\Blank_A4_3_1.jrxml";
+            JasperReport compilar = JasperCompileManager.compileReport(caminho);
+            //parametros hashMap
+            HashMap<String,Object>parametros = new HashMap<>();
+            parametros.put("pDataInicial",java.sql.Timestamp.valueOf(dataInicio+" 23:59:00"));
+            parametros.put("pDataFinal", java.sql.Timestamp.valueOf(dataFinal+" 23:59:00"));
+            JasperPrint imprimir = JasperFillManager.fillReport(compilar, parametros,coin);
+            JasperViewer ver = new  JasperViewer(imprimir,false);
+            ver.setVisible(true);
+            
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(NewJFrame1.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }catch (JRException ex) {
+                System.getLogger(NewJFrame1.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+         }
