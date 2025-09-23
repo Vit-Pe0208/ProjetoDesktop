@@ -1,0 +1,194 @@
+Documento Atualização banco de Dados final.
+
+ public void atualizartabelaAdministrador(){
+        try {
+            SimpleDateFormat dataAniversario = new SimpleDateFormat("dd/MM/yyyy");
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT \n" +
+"p.nome AS Administrador,\n" +
+" p.email AS EmailPessoal,\n" +
+" p.cpf AS CPF,\n" +
+" p.genero AS Gênero,\n" +
+" p.data_nascimento AS DataNascimento,\n" +
+" adm.matricula AS Matrícula,\n" +
+" adm.cargo AS Cargo,\n" +
+" p.situacao AS SituaçãoADM,p.id_pessoa\n" +
+" FROM administrador adm\n" +
+"INNER JOIN pessoa p ON p.id_pessoa=adm.id_pessoa;";
+             
+             
+             
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaadm = (DefaultTableModel) this.TabelaAdministrador.getModel();
+            tabelaadm.setNumRows(0);
+             while(rs.next()){
+                 Date dataDate = rs.getDate("DataNascimento");
+                 String dataTexto=dataAniversario.format(dataDate);
+                 
+                 Object[] array ={rs.getString("Administrador"),rs.getString("EmailPessoal")
+                 ,rs.getString("CPF"),rs.getString("Gênero"),dataTexto,
+                 rs.getString("Matrícula"),rs.getString("Cargo"),rs.getString("SituaçãoADM"),rs.getString("id_pessoa")};
+                 tabelaadm.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+    }
+
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        try {
+             SimpleDateFormat data= new SimpleDateFormat("yyyy-MM-dd");
+             String dataformatada = data.format(this.calendariodataNascimento.getDate());
+                 
+           if(!RegexValidarFuncionario.validarNome(nome.getText())){
+                JOptionPane.showMessageDialog(null, "Nome errado\nescreva apenas letras e comece com maiúsculas!");
+                
+            }else if(!RegexValidarFuncionario.validarCPF(cpf.getText())){
+                JOptionPane.showMessageDialog(null, "CPF errado!\n[xxxxxxxxx-xx]");
+            }else if(!RegexValidarFuncionario.validarMatricula(matricula.getText())){
+                JOptionPane.showMessageDialog(null, "Matrícula errada errado\n[Duas letras máximo 16 caracteres]!");
+                
+            }else if(!RegexValidarFuncionario.validarCargo(cargo.getText())){
+                 JOptionPane.showMessageDialog(null, "Cargo errado!\n[Digite apenas letras e comece com maiusculas]");
+            }else if(!RegexValidarFuncionario.validarSalario(salario.getText())){
+                JOptionPane.showMessageDialog(null, "Salário errado, digite apenas números\n![xxxxx.xx]");
+            }else if(!RegexValidarFuncionario.validarEmail(this.emailPessoa.getText())){
+                JOptionPane.showMessageDialog(null, "Email e errado!\n[usuario@blusablusas.com]"); 
+            }else{
+         Connection coin = conexaoBancoDeDados.conexaoBanco();
+         String sql = "INSERT INTO pessoa(nome,email,cpf,genero,data_nascimento)\n" +
+         "VALUES(?,?,?,?,?);";
+         PreparedStatement stmt = coin.prepareStatement(sql);
+         stmt.setString(1, this.nome.getText());
+         stmt.setString(2, this.emailPessoa.getText());
+         stmt.setString(3, this.cpf.getText());
+         stmt.setString(4, this.genero);
+         stmt.setString(5,  dataformatada);
+         stmt.execute();
+            
+         sql= "INSERT INTO administrador(matricula,cargo,salario,id_pessoa)\n" +
+        "VALUES(?,?,?,(SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+         stmt= coin.prepareStatement(sql);
+         stmt.setString(1, this.matricula.getText());
+         stmt.setString(2, this.cargo.getText());
+         stmt.setString(3, this.salario.getText());
+         stmt.execute();
+         
+         sql="INSERT INTO login(usuario,senha,alterar_senha,id_pessoa)\n"
+          + "VALUES((SELECT email FROM pessoa ORDER BY id_pessoa DESC LIMIT 1),UPPER(MD5('blusa123')),'S',(SELECT id_pessoa FROM pessoa ORDER BY id_pessoa DESC LIMIT 1));";
+         stmt = coin.prepareStatement(sql);
+         stmt.execute();
+         
+         
+         stmt.close();
+         coin.close();
+         JOptionPane.showMessageDialog(null, "Funcionário Cadastrado com Sucesso!!");
+         atualizartabelaAdministrador();          
+        }   
+        } catch (SQLException ex) {
+            System.getLogger(CadastroFuncionário.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+          
+private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {                                      
+       try {
+        SimpleDateFormat data= new SimpleDateFormat("yyyy-MM-dd");
+        String dataformatada = data.format(this.calendariodataNascimento.getDate());
+        
+        if(!RegexValidarFuncionario.validarNome(nome.getText())){
+                JOptionPane.showMessageDialog(null, "Nome errado\nescreva apenas letras e comece com maiúsculas!");
+                
+            }else if(!RegexValidarFuncionario.validarCPF(cpf.getText())){
+                JOptionPane.showMessageDialog(null, "CPF errado!\n[xxxxxxxxx-xx]");
+            }else if(!RegexValidarFuncionario.validarMatricula(matricula.getText())){
+                JOptionPane.showMessageDialog(null, "Matrícula errada errado\n[Duas letras máximo 16 caracteres]!");
+                
+            }else if(!RegexValidarFuncionario.validarCargo(cargo.getText())){
+                 JOptionPane.showMessageDialog(null, "Cargo errado!\n[Digite apenas letras e comece com maiusculas]");
+            }else if(!RegexValidarFuncionario.validarEmail(this.emailPessoa.getText())){
+                JOptionPane.showMessageDialog(null, "Email e errado!\n[usuario@blusablusas.com]"); 
+            }else{
+         Connection coin = conexaoBancoDeDados.conexaoBanco();
+         String sql = "UPDATE pessoa SET nome = ?,email=?,cpf=?,genero=?,data_nascimento=?,situacao=? WHERE id_pessoa=?;";
+         PreparedStatement stmt = coin.prepareStatement(sql);
+         stmt.setString(1, this.nome.getText());
+         stmt.setString(2, this.emailPessoa.getText());
+         stmt.setString(3, this.cpf.getText());
+         stmt.setString(4, this.genero);
+         stmt.setString(5, dataformatada);
+         stmt.setString(6, this.situacao);
+         stmt.setString(7, this.codigopessoa.getText());
+         stmt.executeUpdate();
+         sql = "UPDATE administrador SET matricula=?,cargo=? WHERE id_pessoa=?;";
+         stmt= coin.prepareStatement(sql);
+         stmt.setString(1, this.matricula.getText());
+         stmt.setString(2, this.cargo.getText());
+         stmt.setString(3, this.codigopessoa.getText());
+         stmt.executeUpdate();
+         stmt.close();
+         coin.close();
+         JOptionPane.showMessageDialog(null, "Funcionário alterado com sucesso");
+         atualizartabelaAdministrador();
+         limparCampos();
+                
+                
+                
+                
+                
+            }
+        
+        
+        
+        
+             
+        
+         
+         
+           
+       } catch (SQLException ex) {
+           System.getLogger(CadastroFuncionário.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+       }
+
+ int resposta = JOptionPane.showConfirmDialog(null,
+        "Tem certeza que deseja excluir este funcionário?\nEssa ação também removerá os dados pessoais.",
+       "Confirmar Exclusão",
+      JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+        
+        if(resposta== JOptionPane.YES_NO_OPTION){
+             try {
+           Connection coin = conexaoBancoDeDados.conexaoBanco();
+           
+           String sql = "DELETE FROM login WHERE id_pessoa=?;";
+           PreparedStatement stmt = coin.prepareStatement(sql);
+            stmt.setString(1, this.codigopessoa.getText());
+           stmt.execute();
+           sql = "DELETE FROM administrador WHERE id_pessoa = ?;";
+           stmt = coin.prepareStatement(sql);
+           stmt.setString(1, this.codigopessoa.getText());
+           stmt.execute();
+           sql = "DELETE FROM pessoa WHERE id_pessoa=?;";
+           stmt = coin.prepareStatement(sql);
+           stmt.setString(1, this.codigopessoa.getText());
+        
+          
+               stmt.execute();
+               JOptionPane.showMessageDialog(null, "Funcionário Deletado");
+               stmt.close();
+               coin.close();
+               atualizartabelaAdministrador();
+               
+               
+          
+       } catch (SQLException ex) {
+           System.getLogger(CadastroFuncionário.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+           
+       }
+            
+        }

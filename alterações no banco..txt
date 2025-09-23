@@ -1,0 +1,6 @@
+alterações no banco.
+
+ALTER TABLE pessoa MODIFY email VARCHAR(264);
+ALTER TABLE pessoas_deletadas MODIFY email VARCHAR(254);
+ALTER TABLE login MODIFY usuario VARCHAR(254);
+ALTER TABLE administrador modify id_movimentacao_caixa INT NULL;
