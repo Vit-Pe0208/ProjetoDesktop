@@ -1,0 +1,859 @@
+Documento Atualização banco de Dados final.
+
+Pesquisa.
+
+  private void pesquisarProdutoKeyPressed(java.awt.event.KeyEvent evt) {                                            
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.denominacao,\n" +
+"SUM(iv.quantidade_venda) AS QuantidadedeVendas,\n" +
+"p.id_produto \n" +
+"FROM itens_venda iv \n" +
+"INNER JOIN produto p ON p.id_produto = iv.id_produto\n" +
+"WHERE p.denominacao LIKE '%"+this.pesquisarProduto.getText()+"%'\n" +
+"GROUP BY p.id_produto, p.denominacao \n" +
+"HAVING SUM(iv.quantidade_venda) >= 3 \n" +
+"ORDER BY QuantidadedeVendas DESC;";
+             
+             
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaestoquecritico = (DefaultTableModel) this.produtosmaisVendidos.getModel();
+            tabelaestoquecritico.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("QuantidadedeVendas"),rs.getString("id_produto")};
+                 tabelaestoquecritico.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+    }                                           
+
+    private void pesquisarCPFKeyPressed(java.awt.event.KeyEvent evt) {                                        
+
+            Connection coin;
+        try {
+            coin = conexaoBancoDeDados.conexaoBanco();
+            String sql = "SELECT \n" +
+" p.nome AS Usuário,\n" +
+" p.cpf AS CPF,\n" +
+"lp.usuario AS EMAIL,\n" +
+" u.id_pessoa,\n" +
+"SUM(v.valor_total) AS ValorTotal\n" +
+"FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"INNER JOIN login lp ON p.id_pessoa= lp.id_pessoa\n" +
+"WHERE p.cpf LIKE '%"+this.pesquisarCPF.getText()+"%'\n" +
+"GROUP BY  p.id_pessoa, p.nome, p.cpf, lp.usuario\n" +
+"ORDER BY ValorTotal DESC;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        DefaultTableModel tabelavendasPorCliente = (DefaultTableModel) this.relatorioVendasPorcliente.getModel();
+         tabelavendasPorCliente.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Usuário"),rs.getString("CPF"),rs.getString("EMAIL"),rs.getString("id_pessoa"),rs.getString("ValorTotal")};
+                 tabelavendasPorCliente.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+        
+        } catch (SQLException ex) {
+            System.getLogger(TelaDeRelatório.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+        
+    }                                       
+
+    private void pesquisarPagamentoKeyPressed(java.awt.event.KeyEvent evt) {                                              
+              try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT\n" +
+"p.forma_pagamento,\n" +
+"SUM(v.valor_total) AS TotalValores,\n" +
+"COUNT(p.forma_pagamento) AS Tipodepagamentorealizado\n" +
+"FROM venda v\n" +
+"INNER JOIN pagamento p ON p.id_pagamento=v.id_pagamento\n" +
+"WHERE p.forma_pagamento LIKE '%\"+this.pesquisarPagamento.getText()+\"%'                    \n" +
+"GROUP BY forma_pagamento;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelapagamento = (DefaultTableModel) this.tabelaPagamento.getModel();
+            tabelapagamento.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("forma_pagamento"),rs.getString("TotalValores"),rs.getString("Tipodepagamentorealizado")};
+                 tabelapagamento.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }         
+    }                                             
+
+    private void pesquisarPagamentoKeyReleased(java.awt.event.KeyEvent evt) {                                               
+        
+    }                                              
+
+    private void pesquisarEstoqueKeyPressed(java.awt.event.KeyEvent evt) {                                            
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao = 'Ativo' && denominacao LIKE '%"+this.pesquisarEstoque.getText()+"%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaEstoque.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("id_produto"),rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+    }                                           
+
+    private void pesquisaPActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void pesquisaPKeyPressed(java.awt.event.KeyEvent evt) {                                     
+        try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.id_produto AS Codigo \n" +
+",p.denominacao AS Produto ,\n" +
+"p.quantidade_estoque AS QuantidadenoEstoque ,\n" +
+"p.preco AS  PreÃ§o ,\n" +
+"p.situacao AS SituacaoProduto,\n" +
+"d.descricao AS DescriÃ§Ã£o,\n" +
+"d.cor AS Cor,\n" +
+"d.tecido AS Tecido,\n" +
+"d.tamanho AS tamanho,\n" +
+"d.categoria AS Categoria, \n" +
+"d.imagem_url AS URL\n" +
+"FROM produto p \n" +
+"INNER JOIN descricao d ON d.id_descricao = p.id_descricao WHERE p.denominacao LIKE '%"+this.pesquisaP.getText()+"%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaEstoque = (DefaultTableModel) this.produtotabela.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Codigo"),rs.getString("Produto"),rs.getString("QuantidadenoEstoque"),rs.getString("PreÃ§o"),rs.getString("SituacaoProduto"),rs.getString("DescriÃ§Ã£o"),rs.getString("Cor"),rs.getString("Tecido"),rs.getString("Tamanho"),rs.getString("Categoria"),rs.getString("URL")};
+                 tabelaEstoque.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+
+        
+        
+        
+    }           
+ private void ativoMouseClicked(java.awt.event.MouseEvent evt) {                                   
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.id_produto AS Codigo \n" +
+",p.denominacao AS Produto ,\n" +
+"p.quantidade_estoque AS QuantidadenoEstoque ,\n" +
+"p.preco AS  PreÃ§o ,\n" +
+"p.situacao AS SituacaoProduto,\n" +
+"d.descricao AS DescriÃ§Ã£o,\n" +
+"d.cor AS Cor,\n" +
+"d.tecido AS Tecido,\n" +
+"d.tamanho AS tamanho,\n" +
+"d.categoria AS Categoria, \n" +
+"d.imagem_url AS URL\n" +
+"FROM produto p \n" +
+"INNER JOIN descricao d ON d.id_descricao = p.id_descricao WHERE situacao LIKE 'Ativo%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.produtotabela.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                Object[] array ={rs.getString("Codigo"),rs.getString("Produto"),rs.getString("QuantidadenoEstoque"),rs.getString("PreÃ§o"),rs.getString("SituacaoProduto"),rs.getString("DescriÃ§Ã£o"),rs.getString("Cor"),rs.getString("Tecido"),rs.getString("Tamanho"),rs.getString("Categoria"),rs.getString("URL")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+
+
+    }                                  
+
+    private void esgotadoMouseClicked(java.awt.event.MouseEvent evt) {                                      
+        try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.id_produto AS Codigo \n" +
+",p.denominacao AS Produto ,\n" +
+"p.quantidade_estoque AS QuantidadenoEstoque ,\n" +
+"p.preco AS  PreÃ§o ,\n" +
+"p.situacao AS SituacaoProduto,\n" +
+"d.descricao AS DescriÃ§Ã£o,\n" +
+"d.cor AS Cor,\n" +
+"d.tecido AS Tecido,\n" +
+"d.tamanho AS tamanho,\n" +
+"d.categoria AS Categoria, \n" +
+"d.imagem_url AS URL\n" +
+"FROM produto p \n" +
+"INNER JOIN descricao d ON d.id_descricao = p.id_descricao WHERE situacao LIKE 'Esgotado%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.produtotabela.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Codigo"),rs.getString("Produto"),rs.getString("QuantidadenoEstoque"),rs.getString("PreÃ§o"),rs.getString("SituacaoProduto"),rs.getString("DescriÃ§Ã£o"),rs.getString("Cor"),rs.getString("Tecido"),rs.getString("Tamanho"),rs.getString("Categoria"),rs.getString("URL")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+
+    }                                     
+
+    private void DescontinuadoMouseClicked(java.awt.event.MouseEvent evt) {                                           
+        try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.id_produto AS Codigo \n" +
+",p.denominacao AS Produto ,\n" +
+"p.quantidade_estoque AS QuantidadenoEstoque ,\n" +
+"p.preco AS  PreÃ§o ,\n" +
+"p.situacao AS SituacaoProduto,\n" +
+"d.descricao AS DescriÃ§Ã£o,\n" +
+"d.cor AS Cor,\n" +
+"d.tecido AS Tecido,\n" +
+"d.tamanho AS tamanho,\n" +
+"d.categoria AS Categoria, \n" +
+"d.imagem_url AS URL\n" +
+"FROM produto p \n" +
+"INNER JOIN descricao d ON d.id_descricao = p.id_descricao WHERE situacao LIKE 'Descontinuado%';";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+              DefaultTableModel tabelaEstoque = (DefaultTableModel) this.produtotabela.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Codigo"),rs.getString("Produto"),rs.getString("QuantidadenoEstoque"),rs.getString("PreÃ§o"),rs.getString("SituacaoProduto"),rs.getString("DescriÃ§Ã£o"),rs.getString("Cor"),rs.getString("Tecido"),rs.getString("Tamanho"),rs.getString("Categoria"),rs.getString("URL")};
+                 tabelaEstoque.addRow(array);
+             }
+             coin.close();
+             stmt.close();
+             rs.close(); 
+            
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+    }                 
+
+ try {
+               SimpleDateFormat dataFormatada = new SimpleDateFormat("yyyy-MM-dd");
+               String data = dataFormatada.format(this.dateInicio.getDate()) + " 00:00:00";
+               String data2 =  dataFormatada.format(this.dateFinal.getDate())+ " 23:59:59";
+            
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT nome,cpf,data_compra,valor_total,id_venda FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"WHERE data_compra between ? AND ? ;";
+             
+             
+             
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             stmt.setString(1, data);
+             stmt.setString(2, data2);
+             
+             
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelavenda = (DefaultTableModel) this.tabelaVendaPorperiodo.getModel();
+            tabelavenda.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("nome"),rs.getString("cpf"),rs.getString("data_compra"),rs.getString("valor_total"),rs.getString("id_venda")};
+                 tabelavenda.addRow(array);
+                 
+             }
+             
+             sql = "SELECT SUM(v.valor_total) AS Total FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"WHERE data_compra between ? AND ? ;";
+             
+             stmt = coin.prepareStatement(sql);
+             stmt.setString(1, data);
+             stmt.setString(2, data2);
+             
+              rs = stmt.executeQuery();
+              
+              
+              if(rs.next()){
+                  String total = rs.getString("Total");
+                  
+                  if(total==null){
+                      this.resultado.setText("0");
+                  }else{
+                      this.resultado.setText(rs.getString("Total"));
+                  }  
+              }  
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+
+//Gráficos
+
+
+public void graficoVendasPorPeriodo(){
+     try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT YEAR(v.data_compra) AS ano, " +
+                     "MONTH(v.data_compra) AS mes, " +
+                     "SUM(v.valor_total) AS total_vendido " +
+                     "FROM venda v " +
+                     "GROUP BY YEAR(v.data_compra), MONTH(v.data_compra) " +
+                     "ORDER BY ano, mes";
+
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        while (rs.next()) {
+            int ano = rs.getInt("ano");
+            int mes = rs.getInt("mes");
+            double totalVendido = rs.getDouble("total_vendido");
+
+            String rotulo = String.format("%02d/%d", mes, ano);
+            dataset.setValue(rotulo, totalVendido);
+        }
+
+        JFreeChart grafico = ChartFactory.createPieChart(
+                "Vendas por Mês", dataset, true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(grafico);
+
+        // limpa o painel e adiciona o gráfico
+        panelPeriodovendas.removeAll();
+        panelPeriodovendas.setLayout(new BorderLayout());
+        panelPeriodovendas.add(chartPanel, BorderLayout.CENTER);
+        panelPeriodovendas.validate();
+
+        rs.close();
+        stmt.close();
+        coin.close();
+
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+ //Gráficos
+    public void graficoPizzaProdutos() {
+    DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT p.denominacao, SUM(iv.quantidade) AS QuantidadedeVendas " +
+                     "FROM itens_venda iv " +
+                     "INNER JOIN produto p ON p.id_produto = iv.id_produto " +
+                     "GROUP BY p.id_produto, p.denominacao " +
+                     "HAVING SUM(iv.quantidade) >= 3 " +
+                     "ORDER BY QuantidadedeVendas DESC";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+       
+        while (rs.next()) {
+            String denominacao = rs.getString("denominacao");
+            double quantidade = rs.getDouble("QuantidadedeVendas");
+            pieDataset.setValue(denominacao, quantidade);
+        }
+
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Produtos Mais Vendidos",
+        pieDataset,
+        true,   
+        true,   
+        false   
+    );
+
+    // Painel do gráfico
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+    chartPanel.setMouseWheelEnabled(true);
+
+    
+    painelGrafico.removeAll(); 
+    painelGrafico.setLayout(new java.awt.BorderLayout()); 
+    painelGrafico.add(chartPanel, BorderLayout.CENTER); 
+    painelGrafico.revalidate();
+    painelGrafico.repaint();    
+}
+    
+    
+    
+    
+
+
+
+ public void graficoVendasPorUsuario() {
+    DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT p.nome AS Usuário, SUM(v.valor_total) AS ValorTotal " +
+                     "FROM venda v " +
+                     "INNER JOIN usuario u ON u.id_usuario = v.id_usuario " +
+                     "INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa " +
+                     "GROUP BY p.id_pessoa, p.nome " +
+                     "ORDER BY ValorTotal DESC";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        
+        while (rs.next()) {
+            String usuario = rs.getString("Usuário");
+            double valorTotal = rs.getDouble("ValorTotal");
+            pieDataset.setValue(usuario, valorTotal);
+        }
+
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Resumo de Vendas por Cliente",
+        pieDataset,
+        true,   
+        true,   
+        false   
+    );
+
+    
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+    chartPanel.setMouseWheelEnabled(true);
+
+    
+    this.painelGraficoVendasporCliente.removeAll(); 
+    painelGraficoVendasporCliente.setLayout(new java.awt.BorderLayout()); 
+    painelGraficoVendasporCliente.add(chartPanel, BorderLayout.CENTER); 
+    painelGraficoVendasporCliente.revalidate(); 
+    painelGraficoVendasporCliente.repaint();    
+}
+
+
+ public void graficoPizzaPagamento() {
+    DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT p.forma_pagamento,SUM(v.valor_total) AS ValorTotal FROM venda v\n" +
+"INNER JOIN pagamento p ON p.id_pagamento = v.id_pagamento\n" +
+"WHERE p.situacao = 'ativo'\n" +
+"GROUP BY p.forma_pagamento;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        
+        while (rs.next()) {
+            String formaPagamento = rs.getString("forma_pagamento");
+            double totalValores = rs.getDouble("ValorTotal");
+            pieDataset.setValue(formaPagamento, totalValores);
+        }
+
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Distribuição das Formas de Pagamento",
+        pieDataset,
+        true,   
+        true,   
+        false  
+    );
+
+    
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+    chartPanel.setMouseWheelEnabled(true);
+
+    
+    painelGraficoPagamento.removeAll(); 
+    painelGraficoPagamento.setLayout(new java.awt.BorderLayout()); 
+    painelGraficoPagamento.add(chartPanel, BorderLayout.CENTER); 
+    painelGraficoPagamento.revalidate(); 
+    painelGraficoPagamento.repaint();   
+}
+
+
+public void graficoPizzaEstoqueProdutos() {
+    DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT denominacao, quantidade_estoque FROM produto WHERE situacao = 'ativo' && quantidade_estoque >10 ;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String produto = rs.getString("denominacao");
+            int quantidade = rs.getInt("quantidade_estoque");
+            pieDataset.setValue(produto, quantidade);
+        }
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Estoque dos Produtos Ativos",
+        pieDataset,
+        true,  
+        true,   
+        false  
+    );
+
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(600, 350));
+    chartPanel.setMouseWheelEnabled(true);
+
+    painelGraficoProduto.removeAll();
+    painelGraficoProduto.setLayout(new java.awt.BorderLayout());
+   painelGraficoProduto.add(chartPanel, java.awt.BorderLayout.CENTER);
+    painelGraficoProduto.revalidate();
+    painelGraficoProduto.repaint();
+}
+
+public void graficoEstados(){
+     
+      DefaultPieDataset pieDataset = new DefaultPieDataset();
+    try {
+        Connection coin = conexaoBancoDeDados.conexaoBanco();
+        String sql = "SELECT \n" +
+"e.uf,COUNT(e.uf)\n" +
+"FROM usuario u \n" +
+"INNER JOIN pessoa pu ON pu.id_pessoa = u.id_pessoa\n" +
+"INNER JOIN endereco e ON e.id_pessoa=pu.id_pessoa\n" +
+"GROUP BY uf;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String estado = rs.getString("uf");
+            int quantidade = rs.getInt("COUNT(e.uf)");
+            pieDataset.setValue(estado, quantidade);
+        }
+        rs.close();
+        stmt.close();
+        coin.close();
+    } catch (SQLException ex) {
+        System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    JFreeChart chart = ChartFactory.createPieChart(
+        "Estados dos Usuários Cadastrados",
+        pieDataset,
+        true,  
+        true,   
+        false  
+    );
+
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new java.awt.Dimension(600, 350));
+    chartPanel.setMouseWheelEnabled(true);
+
+    painelEndereço.removeAll();
+    painelEndereço.setLayout(new java.awt.BorderLayout());
+    painelEndereço.add(chartPanel, java.awt.BorderLayout.CENTER);
+    painelEndereço.revalidate();
+    painelEndereço.repaint();
+     
+     
+ }
+
+//Tabelas
+
+ public void atualizarRelatorioProdutosVendidos(){
+            try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT\n" +
+"p.denominacao,\n" +
+"SUM(iv.quantidade) AS QuantidadedeVendas,\n" +
+"p.id_produto\n" +
+" FROM itens_venda iv\n" +
+"INNER JOIN  produto p ON p.id_produto = iv.id_produto\n" +
+" GROUP BY id_produto HAVING SUM(iv.quantidade) >=3\n" +
+" ORDER BY QuantidadedeVendas DESC;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaestoquecritico = (DefaultTableModel) this.produtosmaisVendidos.getModel();
+            tabelaestoquecritico.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("denominacao"),rs.getString("QuantidadedeVendas"),rs.getString("id_produto")};
+                 tabelaestoquecritico.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+       }
+       
+   
+   
+    
+    public void relatoriorelatorioVendasPorcliente(){
+        Connection coin;
+        try {
+            coin = conexaoBancoDeDados.conexaoBanco();
+            String sql = " SELECT \n" +
+" p.nome AS Usuário,\n" +
+" p.cpf AS CPF,\n" +
+" p.email AS EMAIL,\n" +
+" u.id_pessoa,\n" +
+" SUM(v.valor_total) AS ValorTotal\n" +
+" FROM venda v\n" +
+" INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+" INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa\n" +
+"GROUP BY  p.id_pessoa, p.nome, p.cpf, p.email\n" +
+"ORDER BY ValorTotal DESC;";
+        PreparedStatement stmt = coin.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        DefaultTableModel tabelavendasPorCliente = (DefaultTableModel) this.relatorioVendasPorcliente.getModel();
+         tabelavendasPorCliente.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Usuário"),rs.getString("CPF"),rs.getString("EMAIL"),rs.getString("id_pessoa"),rs.getString("ValorTotal")};
+                 tabelavendasPorCliente.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+        
+        } catch (SQLException ex) {
+            System.getLogger(TelaDeRelatório0.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
+        
+    }
+    
+    public void relatorioPagamento(){
+        
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT\n" +
+"p.forma_pagamento,\n" +
+"SUM(v.valor_total)AS TotalValores,\n" +
+"COUNT(p.forma_pagamento) AS TipodePagamentorealizado\n" +
+"FROM venda v\n" +
+"INNER JOIN pagamento p ON p.id_pagamento = v.id_pagamento\n" +
+"WHERE p.situacao = 'ativo' \n" +
+"GROUP BY forma_pagamento\n" +
+";";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelapagamento = (DefaultTableModel) this.tabelaPagamento.getModel();
+            tabelapagamento.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("forma_pagamento"),rs.getString("TotalValores"),rs.getString("Tipodepagamentorealizado")};
+                 tabelapagamento.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+        
+    }
+    
+   
+    
+   public void tabelaEstoque(){
+       
+          
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT * FROM produto WHERE situacao='ativo'";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaEstoque = (DefaultTableModel) this.tabelaEstoque.getModel();
+            tabelaEstoque.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("id_produto"),rs.getString("denominacao"),rs.getString("quantidade_estoque"),rs.getString("preco"),rs.getString("situacao")};
+                 tabelaEstoque.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+       
+   }
+   
+   
+   
+ 
+ 
+ public void atualizaestados(){
+     
+     try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT \n" +
+"e.uf,COUNT(e.uf)\n" +
+"FROM usuario u \n" +
+"INNER JOIN pessoa pu ON pu.id_pessoa = u.id_pessoa\n" +
+"INNER JOIN endereco e ON e.id_pessoa=pu.id_pessoa\n" +
+"GROUP BY uf;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaendereco = (DefaultTableModel) this.tabelaEndereco.getModel();
+            tabelaendereco.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("uf"),rs.getString("COUNT(e.uf)")};
+                 tabelaendereco.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } 
+     
+     
+ }
+
+ public void tabelaProduto(){
+     try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT p.id_produto AS Codigo \n" +
+",p.denominacao AS Produto ,\n" +
+"p.quantidade_estoque AS QuantidadenoEstoque ,\n" +
+"p.preco AS  PreÃ§o ,\n" +
+"p.situacao AS SituacaoProduto,\n" +
+"d.descricao AS DescriÃ§Ã£o,\n" +
+"d.cor AS Cor,\n" +
+"d.tecido AS Tecido,\n" +
+"d.tamanho AS tamanho,\n" +
+"d.categoria AS Categoria, \n" +
+"d.imagem_url AS URL\n" +
+"FROM produto p \n" +
+"INNER JOIN descricao d ON d.id_descricao = p.id_descricao;";
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelaestoquecritico = (DefaultTableModel) this.produtotabela.getModel();
+            tabelaestoquecritico.setNumRows(0);
+             while(rs.next()){
+                 Object[] array ={rs.getString("Codigo"),rs.getString("Produto"),rs.getString("QuantidadenoEstoque"),rs.getString("PreÃ§o"),rs.getString("SituacaoProduto"),rs.getString("DescriÃ§Ã£o"),rs.getString("Cor"),rs.getString("Tecido"),rs.getString("Tamanho"),rs.getString("Categoria"),rs.getString("URL")};
+                 tabelaestoquecritico.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
+
+
+}
+ 
+ public void VendasPorPeriodo(){
+        
+         try {
+            Connection coin = conexaoBancoDeDados.conexaoBanco();
+             String sql ="SELECT nome,cpf,data_compra,valor_total,id_venda FROM venda v\n" +
+"INNER JOIN usuario u ON u.id_usuario = v.id_usuario\n" +
+"INNER JOIN pessoa p ON p.id_pessoa = u.id_pessoa;";
+
+             PreparedStatement stmt = coin.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery();
+             
+            DefaultTableModel tabelavenda = (DefaultTableModel) this.tabelaVendaPorperiodo.getModel();
+            tabelavenda.setNumRows(0);
+             while(rs.next()){
+                 String dataHora = rs.getString("data_compra");
+                 String[] dataCompra = dataHora.split(" ");
+                 String data = dataCompra[0];
+                 String hora = dataCompra[1];
+                 String dataehora = data+"-"+hora;
+                 String[] dataCompra2 = dataehora.split("-");
+                 String ano = dataCompra2[0];
+                 String mes = dataCompra2[1];
+                 String dia = dataCompra2[2];
+                 
+                 Object[] array ={rs.getString("nome"),rs.getString("cpf"),"   "+dia+"/"+mes+"/"+ano+"  "+hora,rs.getString("valor_total"),rs.getString("id_venda")};
+                 tabelavenda.addRow(array);
+                 
+             }
+             coin.close();
+             stmt.close();
+             rs.close();
+            
+        } catch (SQLException ex) {
+            System.getLogger(Home.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }  
