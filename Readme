@@ -1,0 +1,21 @@
+# Sistema Desktop blusa/blusas
+##Descrição
+Sistema desktop com objetivo de gerenciar internamente os ativos da loja blusa/blusa como cadastro e consulta de funcionário;cadastro e consulta de produtos; controle de gestão-estabelecer privilégios de usuário; gerenciamento das informações de vendas; além d geração de relatórios via jasperReports.
+
+O Sistema visa facilitar o gerenciamento,manutenção e administração dos principais ativos da loja(funcionários,estoque e vendas).Visa totalmente ser offline,sem a necessidade de conexão com a internet,Por fim o sistema é adaptado em máquinas locais únicas.
+
+##capturas de tela
+
+##Recursos utilizados
+1.IDE netBeans.
+2.Linguagem de programação Java
+3.Gerenciador de bancos de dados Mysql.
+4.Jaspersoft Studio
+
+##Como executar
+Para executar o sistema será necessário baixar o arquivo .jar e repeti-lo ou realizar o download do código fonte e compilar o projeto, para que em seguida possa ser executado no seu computador.
+
+
+
+
+
