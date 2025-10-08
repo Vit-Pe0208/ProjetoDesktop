@@ -6,6 +6,7 @@ O Sistema visa facilitar o gerenciamento,manutenção e administração dos prin
 
 ##capturas de tela
 
+
 ##Recursos utilizados
 1.IDE netBeans.
 2.Linguagem de programação Java
@@ -16,6 +17,20 @@ O Sistema visa facilitar o gerenciamento,manutenção e administração dos prin
 
 ##Como executar
 Para executar o sistema será necessário baixar o arquivo .jar e repeti-lo ou realizar o download do código fonte e compilar o projeto, para que em seguida possa ser executado no seu computador.
+
+##Funcionalidades
+1.Login e autenticação de usuário
+2.Tela Home para visualização de informações ao vivo da loja, como receita,total de vendas,total de produtos e funcionários ativos;tabelas de estoque crítico,com produtos abaixo de dez unidades no estoque,tabela das ultimas vendas e tabela de funcionários aniversariantes do mes atual.
+Além disso, a tela possuí uma tela de menu com opcções de cadastro dde funcionários e produto;consulta de funcionários,usuários cadastrados e vendas;relatórios e controle de acesso.
+3.Tela de cadastro de funcionário: permite o cadastro e atualizações de informações-nome/sobrenome,email,salário,CPF,genero,data de nascimento,cargo,matrícula,código,situação e salário-de funcionários.A tela também possui uma opção de consultar a tabela de funcionário, além de outra tela de salário, no qual esta permitirá atualizar o salário do funcionário.
+4.Tela de cadastro produto: permite o cadastro e atualizações das informações-nome do produto,quantidade de estoque,preço,situação,descrição,cor,tecido,tamanho e categoria ou tipo de produto,além da URL imagem do produto-dos produtos.A tela também possui uma opção de consultar a tabela de produtos atualizada.
+5.Tela de consulta de Usuários: permite a visualização da tabela de usuários com opcção de consulta individual do telefone e endereço, a tela permite mostrar as principais informações dos usuários cadastrados no sistema.
+6.Tela de consulta de Vendas:  permite a visualização da tabela de vendas por período com opcção de consulta individual de informações fionaceiras e dos itens comprados na venda, a tela permite mostrar as principais informações das vendas realizadas na loja blusablusas.
+7.Tela de consulta de funcionários: permite a visualização da tabela de funcionários,a tela permite mostrar as principais informações dos funcionários cadastrados no sistema.
+8.Tela de relatórios: permite a visualização de tabelas e gráficos de pizza dos relatórios de produtos mais vendidos;vendas por cliente;os tipos de pagamentos;estoque, com o gráfico de produtos catalogando produtos de mais de 10 unidades;os estados dos usuários cadastrados;Vendas por período com total e grafico de vendas por mes; e por fim o gráfico de produtos.Todos tem opções filtragem exceto o relatório de estados, tendo em vista o número fixo de estados existentes(26 estados e um regiçao distrital).
+9.Tela de controle de acesso:Permite o controle de acesso e estabelecimento de privilégios de uso de sistemas,exige a situação do funcionário e seus tipo:administrador,aquele que tem permissão de de cadastros, consultas, gerar relatórios de controlar acesso;usuário normal, aquele que tem permissçao apenas de consulta e geração de relatórios.
+10.Gerar Relatórios: a tela permite gerar relatórios Jasper de informações relacionadas à produtos: produtos cadastrados, estoque, quantidade de produtos ativo e inativo, e quantidade de tipos de tamanhos;à funcionários:funcionários cadastrados e quantidade de funcionários ativo e inativos;à venda: Produtos mais vendidos e vendas por período, caso o usuário não coloque as datas não gerará op relatório.
+
 
 
 
