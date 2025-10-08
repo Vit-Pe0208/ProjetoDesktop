@@ -5,6 +5,10 @@ Sistema desktop com objetivo de gerenciar internamente os ativos da loja blusa/b
 O Sistema visa facilitar o gerenciamento,manutenção e administração dos principais ativos da loja(funcionários,estoque e vendas).Visa totalmente ser offline,sem a necessidade de conexão com a internet,Por fim o sistema é adaptado em máquinas locais únicas.
 
 ##capturas de tela
+"C:\Users\Vitor55679526\Documents\ImagensDo sistemadesktop\Captura de tela 2025-10-08 085323.png"
+
+
+
 
 
 ##Recursos utilizados
@@ -30,6 +34,16 @@ Além disso, a tela possuí uma tela de menu com opcções de cadastro dde funci
 8.Tela de relatórios: permite a visualização de tabelas e gráficos de pizza dos relatórios de produtos mais vendidos;vendas por cliente;os tipos de pagamentos;estoque, com o gráfico de produtos catalogando produtos de mais de 10 unidades;os estados dos usuários cadastrados;Vendas por período com total e grafico de vendas por mes; e por fim o gráfico de produtos.Todos tem opções filtragem exceto o relatório de estados, tendo em vista o número fixo de estados existentes(26 estados e um regiçao distrital).
 9.Tela de controle de acesso:Permite o controle de acesso e estabelecimento de privilégios de uso de sistemas,exige a situação do funcionário e seus tipo:administrador,aquele que tem permissão de de cadastros, consultas, gerar relatórios de controlar acesso;usuário normal, aquele que tem permissçao apenas de consulta e geração de relatórios.
 10.Gerar Relatórios: a tela permite gerar relatórios Jasper de informações relacionadas à produtos: produtos cadastrados, estoque, quantidade de produtos ativo e inativo, e quantidade de tipos de tamanhos;à funcionários:funcionários cadastrados e quantidade de funcionários ativo e inativos;à venda: Produtos mais vendidos e vendas por período, caso o usuário não coloque as datas não gerará op relatório.
+##pré-requisitos
+IDE(Netbeans)
+Java Swing
+Java
+JDK 11+
+Jasper Studio
+Bibliotecas necessárias: https://edusenac-my.sharepoint.com/:u:/g/personal/vitor55679526_edu_df_senac_br/EZiLL2m1AMBGvcS12B6QyxkBZ6TqwtXCBdvPxLayTLUMSg?e=ebVeQi
+Programa jar.:https://edusenac-my.sharepoint.com/:u:/g/personal/vitor55679526_edu_df_senac_br/EegpnDixQ-5Fgum8lWDpf60BdbJvTDkN6D3BRVwW5MvBLA?e=gey0EJ
+
+
 
 
 
