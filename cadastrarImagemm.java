@@ -10,9 +10,12 @@ import com.jtattoo.plaf.luna.LunaLookAndFeel;
 import com.jtattoo.plaf.smart.SmartLookAndFeel;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,10 +26,12 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -35,6 +40,10 @@ import javax.swing.table.DefaultTableModel;
  * @author User
  */
 public class cadastrarImagemm extends javax.swing.JInternalFrame {
+    
+    
+private File imagensSelecionadas;
+
 
     /**
      * Creates new form cadastrarImagemm
@@ -60,12 +69,13 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
         imagemCarregada = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         caminhodaImagem = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         jLabel1.setText("Cadastrar Imagem Funcionário");
 
         jLabel3.setText("Funcionário-Imagem: ");
 
-        jButton1.setText("Click");
+        jButton1.setText("Inserir");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -79,24 +89,25 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
             }
         });
 
+        imagemCarregada.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imagemCarregadaMouseClicked(evt);
+            }
+        });
+
         jLabel2.setText("Caminho Da Imagem: ");
+
+        jButton3.setText("Atualizar");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(funcImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(imagemCarregada, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -108,6 +119,23 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(caminhodaImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(97, 97, 97)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(funcImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addComponent(imagemCarregada, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -127,7 +155,9 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(imagemCarregada, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(caminhodaImagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -193,6 +223,74 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_jButton2MouseClicked
 
+    private void imagemCarregadaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagemCarregadaMouseClicked
+        
+         JFileChooser chooser = new JFileChooser();
+
+        // Filtro para permitir apenas imagens
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Imagens", "jpg", "jpeg", "png");
+        chooser.setFileFilter(filtro);
+
+        // Abre a janela de seleção
+        int resultado = chooser.showOpenDialog( imagemCarregada);
+
+        // Se o usuário escolheu uma imagem
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File imagemSelecionada = chooser.getSelectedFile();
+
+            try {
+                // Cria um ícone com a imagem selecionada
+                ImageIcon iconOriginal = new ImageIcon(imagemSelecionada.getAbsolutePath());
+
+                // Redimensiona a imagem para caber na JLabel
+                Image imagemRedimensionada = iconOriginal.getImage().getScaledInstance(
+                    imagemCarregada.getWidth(),
+                    imagemCarregada.getHeight(),
+                    Image.SCALE_SMOOTH
+                );
+
+                // Exibe a imagem na JLabel
+                imagemCarregada.setIcon(new ImageIcon(imagemRedimensionada));
+
+                // Guarda a imagem selecionada em uma variável da classe (para salvar no banco depois)
+                imagensSelecionadas = imagemSelecionada;
+                
+                
+
+            } catch (Exception e) {
+                Logger.getLogger(cadastrarImagem.class.getName()).log(Level.SEVERE, null, e);
+                JOptionPane.showMessageDialog(imagemCarregada, "Erro ao carregar a imagem.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        
+    }//GEN-LAST:event_imagemCarregadaMouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    try {
+        Connection conn = conexaoBancoDeDados.conexaoBanco();
+        String sql = "UPDATE imagens_funcionario SET dados=? WHERE nome = ? ";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        FileInputStream fis = new FileInputStream(this.imagensSelecionadas);
+        stmt.setBinaryStream(1, fis, (int) this.imagensSelecionadas.length());
+        stmt.setString(2, this.funcImagem.getText());
+        stmt.executeUpdate();
+        stmt.close();
+        conn.close();
+        fis.close();
+        JOptionPane.showMessageDialog(null, "Imagem Modificada com sucesso");
+        
+        
+    } catch (SQLException ex) {
+        System.getLogger(cadastrarImagemm.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    } catch (FileNotFoundException ex) {
+        System.getLogger(cadastrarImagemm.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    } catch (IOException ex) {
+        System.getLogger(cadastrarImagemm.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+        
+    }//GEN-LAST:event_jButton3MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField caminhodaImagem;
@@ -200,6 +298,7 @@ public class cadastrarImagemm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel imagemCarregada;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
