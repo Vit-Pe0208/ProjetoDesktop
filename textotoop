@@ -1,0 +1,17 @@
+this.setToolTipText("");
+       this.produto.setToolTipText("Produto  Use apenas letras, números, espaços e os símbolos - / &. Máximo de 50 caracteres.");
+       this.estoque.setToolTipText("Estoque  Digite um número entre 1 e 999999, sem zeros à esquerda.");
+       this.preco.setToolTipText("Preço  Use o formato 0.00 (com ponto e duas casas decimais).");
+       this.descricao.setToolTipText("Descrição  Deve começar com letra maiúscula e conter apenas letras e espaços. Máximo de 50 caracteres.");
+       this.cor.setToolTipText("Cor  Use uma ou duas palavras, começando com letra maiúscula (exemplo: Azul ou Verde Claro).");
+       this.tecido.setToolTipText("Tecido  Use uma ou duas palavras, começando com letra maiúscula (exemplo: Algodão ou Tecido Premium).");
+       this.categoria.setToolTipText("Tipo de produto  Deve começar com letra maiúscula e conter apenas letras e espaços. Máximo de 20 caracteres.");
+       this.url.setToolTipText("A URL deve começar com http:// ou https:// e terminar com uma imagem (png, jpg, jpeg, gif, bmp, webp ou svg).");
+
+
+ this.setToolTipText("");
+        this.nome.setToolTipText("Formato: Gabriel Silva");
+        this.emailPessoa.setToolTipText("Formato:..@blusablusas.com ");
+        this.salario.setToolTipText("Formato: entre 1 e 999.99");
+        this.cpf.setToolTipText("Formato: 000000000-00");
+        this.matricula.setToolTipText("Formato: NNN000");
